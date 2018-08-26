@@ -2,6 +2,7 @@ package com.li.framework;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.webkit.WebView;
 
 import com.li.framework.base.activity.BaseActivity;
@@ -21,8 +22,9 @@ public class WebActivity extends BaseActivity {
         setContentView(R.layout.activity_web);
 
         web = findViewById(R.id.web);
-
-        web.loadUrl(getIntent().getStringExtra("url"));
+        String url = getIntent().getStringExtra("url");
+        web.loadUrl(url);
+        Log.d("aaa", url);
     }
 
     @Override
