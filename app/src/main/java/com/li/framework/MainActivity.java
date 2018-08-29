@@ -1,14 +1,13 @@
 package com.li.framework;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.li.framework.base.activity.BaseActivity;
 import com.li.framework.mvp.ui.activity.NewsActivity;
-import com.li.net.HttpUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

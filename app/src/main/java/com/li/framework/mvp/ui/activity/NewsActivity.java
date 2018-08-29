@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 import com.li.framework.R;
 import com.li.framework.WebActivity;
-import com.li.framework.base.activity.BaseActivity;
+import com.li.framework.base.activity.BaseMVPActivity;
 import com.li.framework.mvp.model.bean.News;
 import com.li.framework.mvp.presenter.impl.NewsPresenter;
 import com.li.framework.mvp.ui.INewsView;
@@ -19,7 +19,7 @@ import com.li.framework.mvp.ui.adapter.NewsAdapter;
  * @author Li
  * @since 2018/8/26
  */
-public class NewsActivity extends BaseActivity<INewsView, NewsPresenter> implements INewsView {
+public class NewsActivity extends BaseMVPActivity<INewsView, NewsPresenter> implements INewsView {
 
     private ListView list;
     private NewsAdapter adapter;
