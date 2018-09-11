@@ -21,7 +21,7 @@ public abstract class StringCallBack<T> implements ICallBack {
     private String TAG = getClass().getSimpleName();
 
     /**
-     * 运行在子线程
+     * json 数据解析,并实现线程切换
      *
      * @param string 联网成功获取数据
      */
@@ -30,24 +30,19 @@ public abstract class StringCallBack<T> implements ICallBack {
         Log.d(TAG, string);
         Class<?> cls = analysisClazzInfo();
         if (cls != null) {
-            final T t = (T) HttpUtils.gson.fromJson(string, cls);
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    onSuccess(t);
-                }
-            });
+            try {
+                final T t = (T) HttpUtils.gson.fromJson(string, cls);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onSuccess(t);
+                    }
+                });
+            } catch (Exception e) {
+                onFailure(e.getMessage());
+            }
         }
     }
-
-    /**
-     * 运行在主线程
-     *
-     * @param t 实体类
-     */
-    public abstract void onSuccess(T t);
-
-    public abstract void onFailed(String error);
 
     /**
      * 获取泛型类{@link T}类的Class
@@ -63,6 +58,11 @@ public abstract class StringCallBack<T> implements ICallBack {
         return null;
     }
 
+    /**
+     * 实现线程切换
+     *
+     * @param error 错误信息
+     */
     @Override
     public final void onFailure(final String error) {
         handler.post(new Runnable() {
@@ -73,6 +73,9 @@ public abstract class StringCallBack<T> implements ICallBack {
         });
     }
 
+    /**
+     * 实现线程切换
+     */
     @Override
     public final void onFinish() {
         handler.post(new Runnable() {
@@ -82,6 +85,15 @@ public abstract class StringCallBack<T> implements ICallBack {
             }
         });
     }
+
+    /**
+     * 运行在主线程
+     *
+     * @param t 实体类
+     */
+    public abstract void onSuccess(T t);
+
+    public abstract void onFailed(String error);
 
     protected abstract void onFinished();
 }

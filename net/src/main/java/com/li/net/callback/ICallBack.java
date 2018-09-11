@@ -6,10 +6,23 @@ package com.li.net.callback;
  */
 public interface ICallBack {
 
-    void onFailure(String error);
-
+    /**
+     * 成功回调
+     *
+     * @param result json 字符串
+     */
     void onSuccess(String result);
 
+    /**
+     * 失败回调
+     *
+     * @param error 错误信息
+     */
+    void onFailure(String error);
+
+    /**
+     * 完成回调
+     */
     void onFinish();
 
 }
