@@ -68,6 +68,11 @@ public class HttpUtils implements IHttpProxy {
     }
 
     @Override
+    public void download(String url, Map<String, String> param, String filePath, Object tag, ICallBack callBack) {
+        httpProxy.download(url, param, filePath, tag, callBack);
+    }
+
+    @Override
     public void cancel(Object tag) {
         httpProxy.cancel(tag);
     }

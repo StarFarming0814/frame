@@ -1,8 +1,8 @@
-package com.li.framework.mvp.model.impl;
+package com.li.framework.news.model.impl;
 
 import com.li.framework.base.C;
-import com.li.framework.mvp.model.INewsModel;
-import com.li.framework.mvp.model.bean.News;
+import com.li.framework.news.model.INewsModel;
+import com.li.framework.news.model.bean.News;
 import com.li.net.HttpUtils;
 import com.li.net.callback.impl.StringCallBack;
 

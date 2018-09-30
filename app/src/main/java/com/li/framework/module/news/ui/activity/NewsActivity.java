@@ -1,4 +1,4 @@
-package com.li.framework.mvp.ui.activity;
+package com.li.framework.news.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,18 +10,24 @@ import android.widget.ListView;
 import com.li.framework.R;
 import com.li.framework.WebActivity;
 import com.li.framework.base.activity.BaseMVPActivity;
-import com.li.framework.mvp.model.bean.News;
-import com.li.framework.mvp.presenter.impl.NewsPresenter;
-import com.li.framework.mvp.ui.INewsView;
-import com.li.framework.mvp.ui.adapter.NewsAdapter;
+import com.li.framework.news.model.bean.News;
+import com.li.framework.news.presenter.impl.NewsPresenter;
+import com.li.framework.news.ui.INewsView;
+import com.li.framework.news.ui.adapter.NewsAdapter;
+import com.li.net.HttpUtils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * @author Li
  * @since 2018/8/26
  */
-public class NewsActivity extends BaseMVPActivity<INewsView, NewsPresenter> implements INewsView {
+public class NewsActivity extends BaseMVPActivity<INewsView, NewsPresenter>
+        implements INewsView {
 
-    private ListView list;
+    @BindView(R.id.list)
+    ListView list;
     private NewsAdapter adapter;
 
     @Override
@@ -29,11 +35,20 @@ public class NewsActivity extends BaseMVPActivity<INewsView, NewsPresenter> impl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
 
-        list = findViewById(R.id.list);
+        ButterKnife.bind(this);
 
-        if (presenter != null) {
-            presenter.loadPage();
+        loadPage();
+    }
+
+    private void loadPage() {
+        if (!HttpUtils.isNetworkConnected(this)) {
+            toast(R.string.network_disconnected);
+            return;
         }
+        if (presenter == null) {
+            return;
+        }
+        presenter.loadPage();
     }
 
     @Override
@@ -61,7 +76,6 @@ public class NewsActivity extends BaseMVPActivity<INewsView, NewsPresenter> impl
     public void onError(String error) {
         toast(error);
     }
-
 
     /**
      * 创建Presenter

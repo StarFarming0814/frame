@@ -24,6 +24,11 @@ public abstract class BaseListAdapter<E> extends BaseAdapter {
         this.inflater = LayoutInflater.from(context);
     }
 
+    public void setData(List<E> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return data == null ? 0 : data.size();

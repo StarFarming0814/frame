@@ -25,4 +25,9 @@ public interface ICallBack {
      */
     void onFinish();
 
+    void onDownloading(int progress);
+
+    void onDownloadSuccess();
+
+    void onDownloadFailed();
 }

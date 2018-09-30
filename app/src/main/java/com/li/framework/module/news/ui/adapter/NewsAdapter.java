@@ -1,4 +1,4 @@
-package com.li.framework.mvp.ui.adapter;
+package com.li.framework.news.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.li.framework.R;
 import com.li.framework.base.adapter.BaseListAdapter;
-import com.li.framework.mvp.model.bean.News.Result.Data;
+import com.li.framework.news.model.bean.News.Result.Data;
 
 import java.util.List;
 

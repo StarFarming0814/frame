@@ -14,7 +14,7 @@ public interface IHttpProxy {
 
     void post(String url, Map<String, String> param, Object tag, ICallBack callBack);
 
-    void download(String url, Map<String, String> param, Object tag, ICallBack callBack);
+    void download(final String url, Map<String, String> param, String filePath, Object tag, final ICallBack callBack);
 
     void cancel(Object tag);
 }

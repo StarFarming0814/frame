@@ -1,4 +1,4 @@
-package com.li.framework.mvp.model;
+package com.li.framework.news.model;
 
 import com.li.net.callback.ICallBack;
 

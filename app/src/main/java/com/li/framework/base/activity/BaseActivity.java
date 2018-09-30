@@ -1,6 +1,7 @@
 package com.li.framework.base.activity;
 
 import android.annotation.SuppressLint;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -13,7 +14,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private Toast toast;
 
     @SuppressLint("ShowToast")
-    protected void toast(String msg) {
+    public void toast(String msg) {
         if (toast == null) {
             toast = Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT);
         } else {
@@ -24,7 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @SuppressLint("ShowToast")
-    protected void toast(int stringRes) {
+    public void toast(@StringRes int stringRes) {
         if (toast == null) {
             toast = Toast.makeText(getApplication(), stringRes, Toast.LENGTH_SHORT);
         } else {

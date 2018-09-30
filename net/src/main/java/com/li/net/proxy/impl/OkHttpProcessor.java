@@ -1,12 +1,18 @@
 package com.li.net.proxy.impl;
 
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 
 import com.li.net.callback.ICallBack;
 import com.li.net.proxy.IHttpProxy;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -16,7 +22,6 @@ import okhttp3.Dispatcher;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -27,6 +32,8 @@ import okhttp3.ResponseBody;
 public class OkHttpProcessor implements IHttpProxy {
 
     private OkHttpClient client;
+    private Handler handler;
+    private String downloadPath;
 
     public OkHttpProcessor() {
         if (client == null) {
@@ -37,6 +44,10 @@ public class OkHttpProcessor implements IHttpProxy {
                     .retryOnConnectionFailure(true)                    //是否自动重连
                     .build();
         }
+        if (handler == null) {
+            handler = new Handler(Looper.getMainLooper());
+        }
+        downloadPath = Environment.getExternalStorageDirectory().getPath() + File.separator;
     }
 
     @Override
@@ -114,8 +125,98 @@ public class OkHttpProcessor implements IHttpProxy {
     }
 
     @Override
-    public void download(String url, Map<String, String> param, Object tag, ICallBack callBack) {
+    public void download(final String url, Map<String, String> param, String filePath, Object tag, final ICallBack callBack) {
         //TODO 实现下载逻辑
+        Request request = new Request.Builder()
+                .url(url)
+                .tag(tag)
+                .build();
+        if (!filePath.endsWith(File.separator)) {
+            filePath = filePath + File.separator;
+        }
+        final String finalFilePath = filePath;
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                if (callBack != null) {
+                    callBack.onDownloadFailed();
+                }
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                InputStream is = null;
+                byte[] buf = new byte[2048];
+                int len;
+                FileOutputStream fos = null;
+
+                String[] strings = url.split("/");
+                String download = downloadPath + finalFilePath + strings[strings.length - 1];
+                // 先将原来的删掉
+                File file = new File(download);
+                if (!file.exists() || file.delete()) {
+
+                    try {
+                        ResponseBody body = response.body();
+                        if (body == null) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callBack.onDownloadFailed();
+                                }
+                            });
+                            return;
+                        }
+                        is = body.byteStream();
+                        long total = body.contentLength();
+                        fos = new FileOutputStream(file);
+                        long sum = 0;
+                        while ((len = is.read(buf)) != -1) {
+                            fos.write(buf, 0, len);
+                            sum += len;
+                            int progress = (int) (sum * 1.0f / total * 100);
+                            // 下载中
+                            callBack.onDownloading(progress);
+                        }
+                        fos.flush();
+                        // 下载完成
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                callBack.onDownloadSuccess();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        callBack.onDownloadFailed();
+                    } finally {
+                        try {
+                            if (is != null)
+                                is.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            if (fos != null)
+                                fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (callBack != null) {
+                                callBack.onDownloadFailed();
+                            }
+                        }
+                    });
+                }
+
+            }
+        });
     }
 
     @Override

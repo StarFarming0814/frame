@@ -1,4 +1,4 @@
-package com.li.framework.mvp.model.bean;
+package com.li.framework.news.model.bean;
 
 import java.util.List;
 

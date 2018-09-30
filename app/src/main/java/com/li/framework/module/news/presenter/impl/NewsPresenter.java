@@ -1,9 +1,9 @@
-package com.li.framework.mvp.presenter.impl;
+package com.li.framework.news.presenter.impl;
 
-import com.li.framework.mvp.model.bean.News;
-import com.li.framework.mvp.model.impl.NewsModel;
-import com.li.framework.mvp.presenter.BasePresenter;
-import com.li.framework.mvp.ui.INewsView;
+import com.li.framework.news.model.bean.News;
+import com.li.framework.news.model.impl.NewsModel;
+import com.li.framework.base.presenter.BasePresenter;
+import com.li.framework.news.ui.INewsView;
 import com.li.net.callback.impl.StringCallBack;
 
 /**
